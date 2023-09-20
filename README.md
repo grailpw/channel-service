@@ -1,1 +1,1 @@
-# UserService
+# ChannelService

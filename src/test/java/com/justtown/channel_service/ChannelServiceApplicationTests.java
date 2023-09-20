@@ -1,10 +1,10 @@
-package com.justtown.user_service;
+package com.justtown.channel_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UserServiceApplicationTests {
+class ChannelServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
