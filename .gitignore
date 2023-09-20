@@ -38,3 +38,6 @@ out/
 
 ### Docker ###
 docker-compose.yml
+
+### Project ###
+src/main/java/com/justtown/channel_service/config/ChannelConfig.java
