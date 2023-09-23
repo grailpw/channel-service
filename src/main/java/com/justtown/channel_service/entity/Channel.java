@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-import java.util.Date;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -28,37 +25,20 @@ public class Channel {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "registeredAt")
-    private Instant registeredAt;
+    @OneToOne(cascade = CascadeType.ALL)
+    private ChannelDetails channelDetails;
 
-    @Column(name = "lastTimeOnline")
-    private Instant lastTimeOnlineAt;
-
-    @Column(name = "commentsQnt")
-    private Integer commentsQnt;
-
-    @Column(name = "likesQnt")
-    private Integer likesQnt;
-
-    @Column(name = "watchedVideosQnt")
-    private Integer watchedVideosQnt;
-
-    @Column(name = "uploadedVideosQnt")
-    private Integer uploadedVideosQnt;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    private ChannelResources channelResources;
 
     public static class Builder {
         public static Channel newChannel(String channelName) {
             Channel channel = new Channel();
             channel.setChannelName(channelName);
             channel.setDisplayName(channelName);
-            channel.setDescription("");
-            channel.setRegisteredAt(Instant.now());
-            channel.setLastTimeOnlineAt(Instant.now());
-            channel.setCommentsQnt(0);
-            channel.setLikesQnt(0);
-            channel.setWatchedVideosQnt(0);
-            channel.setUploadedVideosQnt(0);
+            channel.setDescription("Empty description");
+            channel.setChannelDetails(ChannelDetails.Builder.newChannelDetails());
+            channel.setChannelResources(ChannelResources.Builer.newChannelResources());
             return channel;
         }
     }
