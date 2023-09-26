@@ -27,8 +27,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((request) -> {
-                    request.requestMatchers("api/v1/set-channel").authenticated();
-                    request.requestMatchers("api/v1/get-or-create-current-channel").authenticated();
+                    request.requestMatchers("api/v1/channel/current").authenticated();
+                    request.requestMatchers("api/v1/channel/resources/get-update-profile-image-link").authenticated();
+                    request.requestMatchers("api/v1/channel/resources/get-update-background-image-link").authenticated();
                     request.anyRequest().permitAll();
                 })
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
