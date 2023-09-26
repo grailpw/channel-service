@@ -18,7 +18,14 @@ jwt:
   secret: ${JWT_KEY}
   lifetime: ${JWT_LIFETIME}
 
+minio:
+  url: ${MINIO_URL}
+  get-bucket: ${MINIO_GET_BUCKET}
+  post-bucket: ${MINIO_POST_BUCKET}
+  accessKey: ${MINIO_ACCESS_KEY}
+  secretKey: ${MINIO_SECRET_KEY}
+
 server:
   error:
     include-message: always
-  port: 8080
+  port: 8081
