@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -15,19 +17,18 @@ public class ChannelResources {
     @SequenceGenerator(name = "channel_resource_sequence", allocationSize = 1)
     private Long id;
 
-    @Column(name = "channelImageURL")
-    private String channelImageURL;
+    @Column(name = "channelImageUUID")
+    private String channelImageUUID;
 
-    @Column(name = "backgroundImageURL")
-    private String backgroundImageURL;
+    @Column(name = "backgroundImageUUID")
+    private String backgroundImageUUID;
 
-    public class Builer {
+    public static class Builder {
         public static ChannelResources newChannelResources() {
             ChannelResources channelResources = new ChannelResources();
-            channelResources.setChannelImageURL("TestURL");
-            channelResources.setBackgroundImageURL("TestURL");
+            channelResources.setChannelImageUUID(UUID.randomUUID().toString());
+            channelResources.setBackgroundImageUUID(UUID.randomUUID().toString());
             return channelResources;
         }
     }
-
 }

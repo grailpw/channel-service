@@ -38,7 +38,7 @@ public class Channel {
             channel.setDisplayName(channelName);
             channel.setDescription("Empty description");
             channel.setChannelDetails(ChannelDetails.Builder.newChannelDetails());
-            channel.setChannelResources(ChannelResources.Builer.newChannelResources());
+            channel.setChannelResources(ChannelResources.Builder.newChannelResources());
             return channel;
         }
     }
