@@ -1,56 +1,30 @@
 package com.justtown.channel_service.service;
 
-import com.justtown.channel_service.dto.request.GetChannelRequest;
-import com.justtown.channel_service.dto.request.SetChannelRequest;
-import com.justtown.channel_service.dto.response.AppErrorResponse;
-import com.justtown.channel_service.dto.response.GetChannelResponse;
-import com.justtown.channel_service.dto.response.SetChannelResponse;
+import com.justtown.channel_service.dto.request.channel.UpdateChannelRequest;
 import com.justtown.channel_service.entity.Channel;
 import com.justtown.channel_service.repository.ChannelRepository;
-import com.justtown.channel_service.util.ResponseUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
 public class ChannelService {
 
+    @Autowired
     private final ChannelRepository repository;
-    private final ResponseUtils responseUtils;
 
-
-    public void updateChannel(Channel channel) {
-        repository.save(channel);
+    public Channel getChannel(String channelName) throws NoSuchElementException {
+        return repository.findByChannelName(channelName).orElseThrow();
     }
 
-    public ResponseEntity<?> getChannel(GetChannelRequest request) {
-        Optional<Channel> optional = repository.findByChannelName(request.getChannelName());
-        if (optional.isEmpty()) {
-            return responseUtils.errorResponse(
-                    HttpStatus.NOT_FOUND,
-                    String.format("User %s not found", request.getChannelName())
-            );
-        }
-        GetChannelResponse response = new GetChannelResponse(optional.get());
-        return ResponseEntity.ok(response);
-    }
-
-    public ResponseEntity<?> setChannel(SetChannelRequest request) {
-        Optional<Channel> optional = repository.findByChannelName(request.getChannelName());
-        if (optional.isEmpty()) {
-            return responseUtils.errorResponse(
-                    HttpStatus.NOT_FOUND,
-                    String.format("User %s not found", request.getChannelName())
-            );
-        }
-        Channel channel = optional.get();
-
-
+    public Channel updateChannel(@Param("request") UpdateChannelRequest request) {
+        Channel channel = getCurrentChannel();
         if (request.getDisplayName() != null) {
             channel.setDisplayName(request.getDisplayName());
         }
@@ -58,19 +32,16 @@ public class ChannelService {
             channel.setDescription(request.getDescription());
         }
         repository.save(channel);
-        return ResponseEntity.ok(new SetChannelResponse(true));
+        return channel;
     }
 
-    public ResponseEntity<?> getOrCreateCurrentChannel() {
+    public Channel getCurrentChannel() {
         String channelName = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         if (!repository.existsByChannelName(channelName)) {
             Channel channel = Channel.Builder.newChannel(channelName);
             repository.save(channel);
         }
-        Optional<Channel> optional = repository.findByChannelName(channelName);
-        if (optional.isEmpty()) {
-            return responseUtils.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to find nor create a user");
-        }
-        return ResponseEntity.ok(new GetChannelResponse(optional.get()));
+        return repository.findByChannelName(channelName).orElseThrow();
     }
+
 }
